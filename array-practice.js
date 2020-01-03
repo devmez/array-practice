@@ -2,6 +2,7 @@
 let deck = [];
 let suits = "hsdc";
 let numbers = "123456789tjqk";
+let userPrompt = require(`readline-sync`);
 
 function initDeck(){
     //returns a deck 52 cards without joker
@@ -13,7 +14,7 @@ function initDeck(){
 
     return deck;
 }
-console.log(initDeck());
+initDeck();
 
 function shuffleDeck(newDeck){
     //shuffles deck
@@ -27,20 +28,34 @@ function shuffleDeck(newDeck){
         deck[numPos] = num2; // ...then replace the randomly picked card with our 'num2' card.
     };
 
-    return deckShuffled;
+    return newDeck;
 };
-console.log(shuffleDeck(deck));
+shuffleDeck(deck);
 
 function dealCard(){
     //returns the top card of the deck. note that if one card is dealt, 
     //there there are 51 cards in the deck
-    
     let handout = deck[0];
-    console.log(handout);
-    deck.splice(0, 1);
 
+    let dealCardAns = userPrompt.question(`Would you like to deal a card? [y / n]: `.toLowerCase());
 
+    if (deck.length = 0){
+        console.log(`We're out of cards.`);
+    };
+
+    if (dealCardAns = `y` || `n`){
+        console.log(handout);
+        console.log(deck.length);
+        deck.splice(0, 1);
+        console.log(deck);
+        console.log(deck.length);
+        dealCard();
+    }else{
+        console.log(`Incorrect input. Try again.`)
+        dealCard();
+    }
 };
+dealCard();
 
 function resetDeck(){
     //resets the deck to original 52 cards;
