@@ -1,21 +1,42 @@
-
 let deck = [];
-let suits = [`Spades`, `Clubs`, `Hearts`, `Diamonds`];
+let hand = [];
+let suits = [`Clubs`, `Diamonds`, `Hearts`, `Spades`];
 let numbers = [`A`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `Jack`, `Queen`, `King`];
 let userPrompt = require(`readline-sync`);
 let userInput = false;
 
+function shufflePrompt(){
+    userInput = false;
+    userInput = userPrompt.question(`Would you like to shuffle the deck? [y / n]: `.toLowerCase());
+
+    if (userInput === `y`){
+        initDeck();
+    }else if (userInput === `n`){
+        initDeck();
+    }else{
+        console.log(`Invalid input. Try again.`)
+    };
+};
+shufflePrompt();
+
 function initDeck(){
     //returns a deck 52 cards without joker
+    deck = [];
+
     for (let i = 0; i < 4; i ++){
         for (let a = 0; a < 13; a ++){
             deck.push(numbers[a] + ` ` + suits[i]);
         };
     };
 
-    return deck;
-}
-initDeck();
+    if (userInput === `y`){
+        shuffleDeck();
+    }else if (userInput === `n`){
+        dealCard();
+    };
+
+    return;
+};
 
 function shuffleDeck(){
     //shuffles deck
@@ -29,14 +50,18 @@ function shuffleDeck(){
         deck[numPos] = num2; // ...then replace the randomly picked card with our 'num2' card.
     };
 
-    return deck;
+    if (userInput === `y`){
+        dealCard();
+    }
+
+    return;
 };
 shuffleDeck();
 
 function dealCard(){
     //returns the top card of the deck. note that if one card is dealt, 
     //there there are 51 cards in the deck
-
+    userInput = false;
     let handout = deck[0];
     console.log(`You have ` + `[` + deck.length + `]` + ` cards remaining`);
 
@@ -45,28 +70,36 @@ function dealCard(){
         resetDeck();
     };
 
-    let dealCardAns = userPrompt.question(`Would you like to deal a card? [y / n]: `.toLowerCase());
+    if (userInput === `check hand`){
+        console.log(hand);
+        dealCard();
+    }
 
-    if (dealCardAns === `y`){
-        deck.splice(0, 1);
+    userInput = userPrompt.question(`Would you like to deal a card? [y / n]: `.toLowerCase());
+
+    if (userInput === `y`){
+        hand.push(deck.splice(0, 1));
         console.log(handout);
         dealCard();
-    }else if (dealCardAns === `n`){
-        
+    }else if (userInput === `n`){
+        console.log(`You have drawn the following cards: ` + `\n` + hand);
+        resetDeck();
     }else{
         console.log(`Incorrect input. Try again.`)
         dealCard();
     };
 };
-dealCard();
 
 function resetDeck(){
     //resets the deck to original 52 cards;
+    userInput = false;
     userInput = userPrompt.question(`Reset Deck? [y / n]: `.toLowerCase());
     if (userInput === `y`){
         initDeck();
+        userInput = `n`;
     }else if (userInput === `n`){
         console.log(`======== E N D ========`);
+        return;
     }else{
         console.log(`Invalid Input. Try Again.`);
         resetDeck();
